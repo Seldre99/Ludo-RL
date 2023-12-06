@@ -33,13 +33,17 @@ while True:
         elif evento.type == pygame.KEYDOWN:
             # Check arrow keys for movement
             if evento.key == pygame.K_UP:
-                tokens[0].move('UP')
+                current_pos, previous_pos = tokens[0].move('UP')
+                print(f'Moved UP. Current Position: {current_pos}, Previous Position: {previous_pos}')
             elif evento.key == pygame.K_DOWN:
-                tokens[0].move('DOWN')
+                current_pos, previous_pos = tokens[0].move('DOWN')
+                print(f'Moved DOWN. Current Position: {current_pos}, Previous Position: {previous_pos}')
             elif evento.key == pygame.K_LEFT:
-                tokens[0].move('LEFT')
+                current_pos, previous_pos = tokens[0].move('LEFT')
+                print(f'Moved LEFT. Current Position: {current_pos}, Previous Position: {previous_pos}')
             elif evento.key == pygame.K_RIGHT:
-                tokens[0].move('RIGHT')
+                current_pos, previous_pos = tokens[0].move('RIGHT')
+                print(f'Moved RIGHT. Current Position: {current_pos}, Previous Position: {previous_pos}')
 
 
     # Pulisci la finestra
