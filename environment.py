@@ -1,5 +1,6 @@
 import pygame
 
+
 # Funzione per disegnare la tabella
 def disegna_tabella(finestra, dimensione_cella, spessore_bordo):
     for riga in range(15):
