@@ -1,0 +1,59 @@
+import pygame
+import sys
+from token import Token
+from environment import disegna_tabella
+
+# Inizializza Pygame
+pygame.init()
+
+# Definisci le dimensioni della finestra e altri parametri
+larghezza_finestra = 600
+altezza_finestra = 600
+colore_sfondo = (255, 255, 255)
+dimensione_cella = larghezza_finestra // 15  # 15 caselle in una riga
+spessore_bordo = 1
+
+####### TOKENS ########
+# Create four tokens
+tokens = [Token((255, 0, 0), (2, 2), dimensione_cella),
+          Token((0, 255, 0), (12, 2), dimensione_cella),
+          Token((0, 0, 255), (2, 12), dimensione_cella),
+          Token((255, 255, 0), (12, 12), dimensione_cella)]
+
+# Inizializza la finestra
+finestra = pygame.display.set_mode((larghezza_finestra, altezza_finestra))
+pygame.display.set_caption("Tabella Ludo")
+
+# Ciclo principale
+while True:
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif evento.type == pygame.KEYDOWN:
+            # Check arrow keys for movement
+            if evento.key == pygame.K_UP:
+                tokens[0].move('UP')
+            elif evento.key == pygame.K_DOWN:
+                tokens[0].move('DOWN')
+            elif evento.key == pygame.K_LEFT:
+                tokens[0].move('LEFT')
+            elif evento.key == pygame.K_RIGHT:
+                tokens[0].move('RIGHT')
+
+
+    # Pulisci la finestra
+    finestra.fill(colore_sfondo)
+
+    # Disegna la tabella
+    disegna_tabella(finestra, dimensione_cella, spessore_bordo)
+
+    # Disegna i tokens
+    for token in tokens:
+        x, y = token.position
+        center_x = x * dimensione_cella + dimensione_cella // 2
+        center_y = y * dimensione_cella + dimensione_cella // 2
+        pygame.draw.circle(finestra, token.color, (center_x, center_y), token.size)
+
+    # Aggiorna la finestra
+    pygame.display.flip()
