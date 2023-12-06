@@ -1,6 +1,6 @@
 import pygame
 import sys
-from token import Token
+from pedina import Token
 from environment import disegna_tabella
 
 # Inizializza Pygame
@@ -15,10 +15,10 @@ spessore_bordo = 1
 
 ####### TOKENS ########
 # Create four tokens
-tokens = [Token((255, 0, 0), (2, 2), dimensione_cella),
-          Token((0, 255, 0), (12, 2), dimensione_cella),
-          Token((0, 0, 255), (2, 12), dimensione_cella),
-          Token((255, 255, 0), (12, 12), dimensione_cella)]
+tokens = [Token((139, 0, 0), (2, 2), dimensione_cella),
+          Token((0, 100, 0), (12, 2), dimensione_cella),
+          Token((173, 216, 230), (2, 12), dimensione_cella),
+          Token((184, 134, 11), (12, 12), dimensione_cella)]
 
 # Inizializza la finestra
 finestra = pygame.display.set_mode((larghezza_finestra, altezza_finestra))
