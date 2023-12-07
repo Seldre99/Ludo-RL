@@ -18,20 +18,12 @@ spessore_bordo = 1
 # Create four tokens
 tokens = [Token((139,0,0), (2, 2), 1, dimensione_cella),
           Token((139,0,0), (2, 3), 2, dimensione_cella),
-          Token((139,0,0), (3, 2), 3, dimensione_cella),
-          Token((139,0,0), (3, 3), 4, dimensione_cella),
           Token((173, 216, 230), (11, 2), 1, dimensione_cella),
           Token((173, 216, 230), (11, 3), 2, dimensione_cella),
-          Token((173, 216, 230), (12, 2), 3, dimensione_cella),
-          Token((173, 216, 230), (12, 3), 4, dimensione_cella),
           Token((0, 100, 0), (2, 11), 1, dimensione_cella),
           Token((0, 100, 0), (2, 12), 2, dimensione_cella),
-          Token((0, 100, 0), (3, 11), 3, dimensione_cella),
-          Token((0, 100, 0), (3, 12), 4, dimensione_cella),
           Token((184, 134, 11), (11, 11), 1, dimensione_cella),
-          Token((184, 134, 11), (11, 12), 2, dimensione_cella),
-          Token((184, 134, 11), (12, 11), 3, dimensione_cella),
-          Token((184, 134, 11), (12, 12), 4, dimensione_cella),]
+          Token((184, 134, 11), (11, 12), 2, dimensione_cella)]
 
 dado = Dice((0, 0, 0), (7, 7), 30)
 # Inizializza la finestra

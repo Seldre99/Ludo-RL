@@ -32,3 +32,17 @@ Risultati:
 miglioramenti nella strategia di gioco.
 • Analisi delle prestazioni in scenari di gioco variati.
 • Discutere le sfide affrontate durante l'implementazione e come sono state risolte.
+
+
+REGOLE DEL GIOCO
+-Per iniziare a muovere le pedine, un giocatore deve ottenere un 6 nel lancio del dado.
+Una volta ottenuto un 6, il giocatore può scegliere di inserire una nuova pedina nel tabellone o
+muovere una pedina già presente sul tabellone.
+-I giocatori lanciano un dado (caso non esce 6 e si ha almeno una pedina in gioco) per determinare il
+numero di spazi che possono muovere una delle loro pedine.
+-Nel caso in cui un giocatore ottenga un numero che non può essere utilizzato per muovere alcuna pedina,
+il suo turno passa al giocatore successivo.
+-Se una pedina atterra su uno spazio occupato da una pedina avversaria, la pedina avversaria viene
+catturata e rimandata nella zona di partenza. Il giocatore che cattura una pedina avversaria ottiene un altro lancio del dado.
+-Due pedine dello stesso colore non possono occupare la stessa casella contemporaneamente.
+-Il primo giocatore che riesce a far entrare tutte e quattro le sue pedine nella zona di arrivo vince.
