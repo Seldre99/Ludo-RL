@@ -1,4 +1,16 @@
 import pygame
+import random
+
+
+class Dice:
+    def __init__(self, color, position, size):
+        self.color = color
+        self.position = position
+        self.size = size
+        self.value = 1
+
+    def roll(self):
+        self.value = random.randint(1, 6)
 
 
 # Funzione per disegnare la tabella

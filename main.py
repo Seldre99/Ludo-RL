@@ -1,7 +1,8 @@
 import pygame
 import sys
 from pedina import Token
-from environment import disegna_tabella
+from environment import disegna_tabella, Dice
+import random
 
 # Inizializza Pygame
 pygame.init()
@@ -32,6 +33,7 @@ tokens = [Token((139,0,0), (2, 2), 1, dimensione_cella),
           Token((184, 134, 11), (12, 11), 3, dimensione_cella),
           Token((184, 134, 11), (12, 12), 4, dimensione_cella),]
 
+dado = Dice((0, 0, 0), (7, 7), 30)
 # Inizializza la finestra
 finestra = pygame.display.set_mode((larghezza_finestra, altezza_finestra))
 pygame.display.set_caption("Tabella Ludo")
@@ -56,6 +58,10 @@ while True:
             elif evento.key == pygame.K_RIGHT:
                 current_pos, previous_pos = tokens[0].move('RIGHT')
                 print(f'Moved RIGHT. Current Position: {current_pos}, Previous Position: {previous_pos}')
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_SPACE:
+                    dado.roll()
+                    print(f'Dice Rolled. Value: {dado.value}')
 
 
     # Pulisci la finestra
@@ -74,5 +80,15 @@ while True:
         number_rect = number.get_rect(center=(center_x, center_y))
         finestra.blit(number, number_rect)
 
+    # Draw the dice
+    pygame.draw.rect(finestra, dado.color, (
+    dado.position[1] * dimensione_cella, dado.position[0] * dimensione_cella, dimensione_cella, dimensione_cella), 0)
+    pygame.draw.rect(finestra, (0, 0, 0), (
+    dado.position[1] * dimensione_cella, dado.position[0] * dimensione_cella, dimensione_cella, dimensione_cella),
+                     spessore_bordo)
+    number = pygame.font.SysFont(None, 30).render(str(dado.value), True, (255, 255, 255))
+    number_rect = number.get_rect(center=(dado.position[1] * dimensione_cella + dimensione_cella // 2,
+                                          dado.position[0] * dimensione_cella + dimensione_cella // 2))
+    finestra.blit(number, number_rect)
     # Aggiorna la finestra
     pygame.display.flip()
