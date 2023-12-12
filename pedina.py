@@ -59,4 +59,4 @@ class Token:
         self.position = (x, y)
 
         # Return the current and previous positions
-        return self.position, self.previous_position
+        return self.position
