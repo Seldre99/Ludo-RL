@@ -1,6 +1,6 @@
 import pygame
 import sys
-from pedina import Token
+from pedina import Token, turn
 from environment import disegna_tabella, Dice
 import time
 
@@ -33,61 +33,7 @@ finestra = pygame.display.set_mode((larghezza_finestra, altezza_finestra))
 pygame.display.set_caption("Tabella Ludo")
 
 
-# Scelta del token da spostare
-def turn(phase, tok):
-    if phase == "red" and tok == 1:
-        if tokens[0].position == (2, 2) and dado.value == 6:
-            tokens[0].position = (6, 2)
-        elif tokens[0].position != (2, 2):
-            new_position = tokens[0].move(dado.value)
-            # Verifica se la nuova posizione è nella zona avversaria e se ci sono pedine avversarie nella stessa posizione
-            if new_position != (2, 2) and new_position == tokens[2].position:
-                # Ritorna alla posizione iniziale
-                print('tokens[2] è stato preso')
-                tokens[2].position = (2, 11)
-            elif new_position != (2, 2) and new_position == tokens[3].position:
-                print('tokens[3] è stato preso')
-                tokens[3].position = (2, 12)
-    elif phase == "red" and tok == 2:
-        if tokens[1].position == (2, 3) and dado.value == 6:
-            tokens[1].position = (6, 2)
-        elif tokens[1].position != (2, 3):
-            new_position = tokens[1].move(dado.value)
-            if new_position != (2, 3) and new_position == tokens[2].position:
-                # Ritorna alla posizione iniziale
-                print('tokens[2] è stato preso')
-                tokens[2].position = (2, 11)
-            elif new_position != (2, 3) and new_position == tokens[3].position:
-                print( 'tokens[3] è stato preso')
-                tokens[3].position = (2, 12)
 
-    elif phase == "green" and tok == 1:
-        if tokens[2].position == (2, 11) and dado.value == 6:
-            tokens[2].position = (2, 8)
-        elif tokens[2].position != (2, 11):
-            new_position = tokens[2].move(dado.value)
-            if new_position != (2, 11) and new_position == tokens[0].position:
-                # Ritorna alla posizione iniziale
-                print('tokens[0] è stato preso')
-                tokens[0].position = (2, 2)
-            elif new_position != (2, 11) and new_position == tokens[1].position:
-                print('tokens[1] è stato preso')
-                tokens[1].position = (2, 3)
-
-    elif phase == "green" and tok == 2:
-        if tokens[3].position == (2, 12) and dado.value == 6:
-            tokens[3].position = (2, 8)
-        elif tokens[3].position != (2, 12):
-            new_position = tokens[3].move(dado.value)
-            if new_position != (2, 12) and new_position == tokens[0].position:
-                # Ritorna alla posizione iniziale
-                print('tokens[0] è stato preso')
-                tokens[0].position = (2, 2)
-            elif new_position != (2, 12) and new_position == tokens[1].position:
-                print('tokens[1] è stato preso')
-                tokens[1].position = (2, 3)
-
-    return dado
 
 # Ciclo principale
 while True:
@@ -110,14 +56,19 @@ while True:
     pygame.draw.rect(finestra, (0, 0, 0), (
     dado.position[1] * dimensione_cella, dado.position[0] * dimensione_cella, dimensione_cella, dimensione_cella),
                      spessore_bordo)
-    if phase == "green":
+
+    ''''
+        if phase == "green":
         number = pygame.font.SysFont(None, 30).render(str(dado.value), True, (255, 0, 0))
     else:
         number = pygame.font.SysFont(None, 30).render(str(dado.value), True, (0, 255, 0))
     number_rect = number.get_rect(center=(dado.position[1] * dimensione_cella + dimensione_cella // 2,
                                           dado.position[0] * dimensione_cella + dimensione_cella // 2))
     finestra.blit(number, number_rect)
+    '''
 
+    consecutive_sixes = 0
+    max_consecutive_sixes = 3
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             pygame.quit()
@@ -126,10 +77,33 @@ while True:
             if evento.key == pygame.K_w or evento.key == pygame.K_e:
                 tok = 1 if evento.key == pygame.K_w else 2
                 phase = "red" if turno_player_red else "green"
-                dado = turn(phase, tok)
-                turno_player_red = not turno_player_red
+                #dado = turn(phase, tok)
+                #turno_player_red = not turno_player_red
+                #dado.roll()
+                #tempo_iniziale = time.time()
+                # Rulla il dado e salva il valore
                 dado.roll()
-                tempo_iniziale = time.time()
+                dice_value = dado.value
+                print("turno:", phase, "valore dado:", dice_value)
+                # Se il dado ritorna 6, incrementa il conteggio
+                if dice_value == 6:
+                    consecutive_sixes += 1
+                    if consecutive_sixes == max_consecutive_sixes:
+                        print(
+                            f"Giocatore ha ottenuto {max_consecutive_sixes} 6 consecutivi. Turno passa all'avversario.")
+                        turno_player_red = not turno_player_red
+                        consecutive_sixes = 0  # Resetta il conteggio
+                else:
+                    # Se il dado non ritorna 6, resetta il conteggio
+                    consecutive_sixes = 0
+
+                # Esegui la logica del turno senza cambiare automaticamente il turno
+                turn(tokens, dado, phase, tok)
+
+                # Se il dado non ritorna 6, cambia automaticamente il turno all'altro giocatore
+                if dice_value != 6:
+                    turno_player_red = not turno_player_red
+                    tempo_iniziale = time.time()
             '''
             # Check arrow keys for movement
             if evento.key == pygame.K_UP:
@@ -159,6 +133,13 @@ while True:
         number = pygame.font.SysFont(None, 30).render(str(token.number), True, (0, 0, 0))
         number_rect = number.get_rect(center=(center_x, center_y))
         finestra.blit(number, number_rect)
+
+    # Disegna il numero del dado
+    number_color = (255, 0, 0) if phase == "red" else (0, 255, 0)
+    number = pygame.font.SysFont(None, 30).render(str(dado.value), True, number_color)
+    number_rect = number.get_rect(center=(dado.position[1] * dimensione_cella + dimensione_cella // 2,
+                                          dado.position[0] * dimensione_cella + dimensione_cella // 2))
+    finestra.blit(number, number_rect)
 
     # Aggiorna la finestra
     pygame.display.flip()
