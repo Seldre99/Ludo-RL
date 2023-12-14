@@ -1,3 +1,6 @@
+import pygame
+
+
 class Token:
     def __init__(self, color, initial_position, number, dimensione_cella):
         self.color = color
@@ -61,6 +64,7 @@ class Token:
         # Return the current and previous positions
         return self.position
 
+
 # Scelta del token da spostare
 def turn(tokens, dado, phase, tok):
     if phase == "red" and tok == 1:
@@ -114,5 +118,24 @@ def turn(tokens, dado, phase, tok):
             elif new_position != (2, 12) and new_position == tokens[1].position:
                 print('tokens[1] è stato preso')
                 tokens[1].position = (2, 3)
-
     return dado
+
+
+# Controllo se ci sia un vincitore
+def endgame(phase, tokens):
+    if phase == "red":
+        return True if (tokens[0].position == (7, 6) and tokens[1].position == (7, 6)) else False
+    else:
+        return True if (tokens[2].position == (6, 7) and tokens[3].position == (6, 7)) else False
+
+
+# Controllo per evitare di perdere il turno
+def check_end_position(evento, tokens, phase):
+    if phase == "red" and evento.key == pygame.K_w:
+        return True if (tokens[0].position == (7, 6)) else False
+    elif phase == "red" and evento.key == pygame.K_e:
+        return True if (tokens[1].position == (7, 6)) else False
+    elif phase == "green" and evento.key == pygame.K_w:
+        return True if (tokens[2].position == (6, 7)) else False
+    elif phase == "green" and evento.key == pygame.K_e:
+        return True if (tokens[3].position == (6, 7)) else False
