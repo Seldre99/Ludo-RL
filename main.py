@@ -1,6 +1,6 @@
 import pygame
 import sys
-from pedina import Token, turn
+from pedina import Token, turn, endgame, check_end_position
 from environment import disegna_tabella, Dice
 import time
 
@@ -33,8 +33,6 @@ finestra = pygame.display.set_mode((larghezza_finestra, altezza_finestra))
 pygame.display.set_caption("Tabella Ludo")
 
 
-
-
 # Ciclo principale
 while True:
 
@@ -57,6 +55,12 @@ while True:
     dado.position[1] * dimensione_cella, dado.position[0] * dimensione_cella, dimensione_cella, dimensione_cella),
                      spessore_bordo)
 
+    # Disegna il numero del dado
+    number_color = (255, 0, 0) if turno_player_red else (0, 255, 0)
+    number = pygame.font.SysFont(None, 30).render(str(dado.value), True, number_color)
+    number_rect = number.get_rect(center=(dado.position[1] * dimensione_cella + dimensione_cella // 2,
+                                          dado.position[0] * dimensione_cella + dimensione_cella // 2))
+    finestra.blit(number, number_rect)
     ''''
         if phase == "green":
         number = pygame.font.SysFont(None, 30).render(str(dado.value), True, (255, 0, 0))
@@ -77,17 +81,20 @@ while True:
             if evento.key == pygame.K_w or evento.key == pygame.K_e:
                 tok = 1 if evento.key == pygame.K_w else 2
                 phase = "red" if turno_player_red else "green"
+                if check_end_position(evento, tokens, phase):
+                    continue
+                dado = turn(tokens, dado, phase, tok)
                 #dado = turn(phase, tok)
                 #turno_player_red = not turno_player_red
                 #dado.roll()
                 #tempo_iniziale = time.time()
                 # Rulla il dado e salva il valore
-                dado.roll()
                 dice_value = dado.value
                 print("turno:", phase, "valore dado:", dice_value)
                 # Se il dado ritorna 6, incrementa il conteggio
                 if dice_value == 6:
                     consecutive_sixes += 1
+                    dado.roll()
                     if consecutive_sixes == max_consecutive_sixes:
                         print(
                             f"Giocatore ha ottenuto {max_consecutive_sixes} 6 consecutivi. Turno passa all'avversario.")
@@ -97,12 +104,10 @@ while True:
                     # Se il dado non ritorna 6, resetta il conteggio
                     consecutive_sixes = 0
 
-                # Esegui la logica del turno senza cambiare automaticamente il turno
-                turn(tokens, dado, phase, tok)
-
                 # Se il dado non ritorna 6, cambia automaticamente il turno all'altro giocatore
                 if dice_value != 6:
                     turno_player_red = not turno_player_red
+                    dado.roll()
                     tempo_iniziale = time.time()
             '''
             # Check arrow keys for movement
@@ -123,6 +128,13 @@ while True:
                     dado.roll()
                     print(f'Dice Rolled. Value: {dado.value}')
             '''
+    # Controllo per vedere se c'è un vincitore
+    if endgame(phase, tokens):
+        print("Ha vinto " + phase)
+        tokens = [Token((139, 0, 0), (2, 2), 1, dimensione_cella),
+                  Token((139, 0, 0), (2, 3), 2, dimensione_cella),
+                  Token((0, 100, 0), (2, 11), 1, dimensione_cella),
+                  Token((0, 100, 0), (2, 12), 2, dimensione_cella)]
 
     # Disegna i tokens
     for token in tokens:
@@ -133,13 +145,6 @@ while True:
         number = pygame.font.SysFont(None, 30).render(str(token.number), True, (0, 0, 0))
         number_rect = number.get_rect(center=(center_x, center_y))
         finestra.blit(number, number_rect)
-
-    # Disegna il numero del dado
-    number_color = (255, 0, 0) if phase == "red" else (0, 255, 0)
-    number = pygame.font.SysFont(None, 30).render(str(dado.value), True, number_color)
-    number_rect = number.get_rect(center=(dado.position[1] * dimensione_cella + dimensione_cella // 2,
-                                          dado.position[0] * dimensione_cella + dimensione_cella // 2))
-    finestra.blit(number, number_rect)
 
     # Aggiorna la finestra
     pygame.display.flip()
