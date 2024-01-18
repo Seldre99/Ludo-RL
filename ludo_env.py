@@ -1,14 +1,13 @@
 from pedina import turn, check_end_position
-from costanti import *
 import gym
+from costanti import *
 
-
-def move_token_one(dado):
-    observation, end = turn(tokens[0], dado, "red", 1)
+def move_token_one(dado, phase):
+    observation, end = turn(tokens, dado, phase, 1)
     return observation, end
 
-def move_token_two(dado):
-    observation, end = turn(tokens[1], dado, "red", 2)
+def move_token_two(dado, phase):
+    observation, end = turn(tokens, dado, phase, 2)
     return observation, end
 
 
@@ -21,19 +20,19 @@ class ludo_env(gym.Env):
             'into the base': gym.spaces.Discrete(3),
             'in the path': gym.spaces.Discrete(3),
             'into the safe zone': gym.spaces.Discrete(3),
-            'arrived at destination': gym.spaces.Discrete(3)
+            'arrived at destination': gym.spaces.Discrete(3),
+            'passed 1': gym.spaces.Discrete(2),
+            'passed 2': gym.spaces.Discrete(2)
         })
 
     def reset(self):
-        tokens = [Token((139, 0, 0), (2, 2), 1, dimensione_cella),
-                  Token((139, 0, 0), (2, 3), 2, dimensione_cella),
-                  Token((0, 100, 0), (2, 11), 1, dimensione_cella),
-                  Token((0, 100, 0), (2, 12), 2, dimensione_cella)]
-        return observations, tokens
+        tokens[0].position = (2, 2)
+        tokens[1].position = (2, 3)
+        tokens[2].position = (2, 11)
+        tokens[3].position = (2, 12)
 
-    def step(self, action, dado, consecutive_sixes):
+    def step(self, action, dado, consecutive_sixes, phase):
         max_consecutive_sixes = 3
-        reward = 0
 
         if action not in [0, 1]:
             raise ValueError("Azione non valida")
@@ -41,27 +40,14 @@ class ludo_env(gym.Env):
         if action == 0:
             if check_end_position(action, tokens, phase):
                 pass
-            observation, end = move_token_one(dado)
-            if tokens[0].position == (6, 2):
-                reward += 0.5
-            elif tokens[0].position in red_safe_zone:
-                reward += 0.8
-            elif tokens[0].position == (7, 6):
-                reward += 0.8
-
+            observation, end = move_token_one(dado, phase)
         elif action == 1:
             if check_end_position(action, tokens, phase):
                 pass
-            observation, end = move_token_two(dado)
-            if tokens[1].position == (6, 2):
-                reward += 0.5
-            elif tokens[1].position in red_safe_zone:
-                reward += 0.8
-            elif tokens[1].position == (7, 6):
-                reward += 0.8
+            observation, end = move_token_two(dado, phase)
 
         dice_value = dado.value
-        print("turno:", phase, "valore dado:", dice_value)
+        #print("turno:", phase, "valore dado:", dice_value)
         # Se il dado ritorna 6, incrementa il conteggio
         if dice_value == 6:
             consecutive_sixes += 1
@@ -77,9 +63,4 @@ class ludo_env(gym.Env):
         if dice_value != 6:
             dado.roll()
 
-        if tokens[0].position == (7, 6) and tokens[1].position == (7, 6):
-            reward += 1
-        #elif tokens[2].position == (6, 7) and tokens[3].position == (6, 7):
-        #    reward -= 0.7
-
-        return dado, observation, reward, consecutive_sixes, end
+        return dado, observation, consecutive_sixes, end
