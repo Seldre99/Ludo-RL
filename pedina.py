@@ -1,5 +1,6 @@
 import costanti
-from costanti import green_safe_zone, red_safe_zone
+from costanti import *
+
 
 class Token:
     def __init__(self, color, initial_position, number, dimensione_cella):
@@ -8,6 +9,7 @@ class Token:
         self.number = number
         self.size = dimensione_cella // 2  # Set the size to half of the cell size
         self.previous_position = None  # Add a variable to store the previous position
+        self.count = 62
 
     def move(self, direction):
         # Save the current position as the previous position
@@ -124,6 +126,7 @@ def turn(tokens, dado, phase, tok):
 
 # Scelta del token da spostare
 def turn(tokens, dado, phase, tok):
+    global observations
     win = False
     if phase == "red" and tok == 1:
         if tokens[0].position == (2, 2) and dado.value == 6:
@@ -133,46 +136,59 @@ def turn(tokens, dado, phase, tok):
                     'into the base': 0,
                     'in the path': 2,
                     'into the safe zone': 0,
-                    'arrived at destination': 0
+                    'arrived at destination': 0,
+                    'passed 1': 0,
+                    'passed 2': 0
+
                 }
             else:
                 observations = {
                     'into the base': 1,
                     'in the path': 1,
                     'into the safe zone': 0,
-                    'arrived at destination': 0
+                    'arrived at destination': 0,
+                    'passed 1': 0,
+                    'passed 2': 0
                 }
         elif tokens[0].position == (2, 2) and dado.value != 6 and tokens[1].position == (2, 3):
             observations = {
                 'into the base': 2,
                 'in the path': 0,
                 'into the safe zone': 0,
-                'arrived at destination': 0
+                'arrived at destination': 0,
+                'passed 1': 0,
+                'passed 2': 0
             }
         elif tokens[0].position != (2, 2):
             new_position = tokens[0].move(dado.value)
             # Verifico se la prima pedina che non è nella base è nella safe zone
-            if new_position in red_safe_zone:
-                if tokens[1].position not in red_safe_zone and tokens[1].position != (2, 3):
+            if new_position in costanti.red_safe_zone:
+                if tokens[1].position not in costanti.red_safe_zone and tokens[1].position != (2, 3):
                     observations = {
                         'into the base': 0,
                         'in the path': 1,
                         'into the safe zone': 1,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
-                elif tokens[1].position not in red_safe_zone and tokens[1].position == (2, 3):
+                elif tokens[1].position not in costanti.red_safe_zone and tokens[1].position == (2, 3):
                     observations = {
                         'into the base': 1,
                         'in the path': 0,
                         'into the safe zone': 1,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
-                elif tokens[1].position in red_safe_zone:
+                elif tokens[1].position in costanti.red_safe_zone:
                     observations = {
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 2,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
 
             elif new_position == (7, 6):
@@ -181,30 +197,38 @@ def turn(tokens, dado, phase, tok):
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 0,
-                        'arrived at destination': 2
+                        'arrived at destination': 2,
+                        'passed 1': 0,
+                        'passed 2': 0
                     }
                     win = endgame('red')
 
-                elif tokens[1].position not in red_safe_zone and tokens[1].position!=(2,3):
+                elif tokens[1].position not in costanti.red_safe_zone and tokens[1].position!=(2,3):
                     observations = {
                         'into the base': 0,
                         'in the path': 1,
                         'into the safe zone': 0,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                     }
-                elif tokens[1].position in red_safe_zone:
+                elif tokens[1].position in costanti.red_safe_zone:
                     observations = {
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 1,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
                 elif tokens[1].position == (2,3):
                     observations = {
                         'into the base': 1,
                         'in the path': 0,
                         'into the safe zone': 0,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
     elif phase == "red" and tok == 2:
         if tokens[1].position == (2, 3) and dado.value == 6:
@@ -214,46 +238,58 @@ def turn(tokens, dado, phase, tok):
                     'into the base': 0,
                     'in the path': 2,
                     'into the safe zone': 0,
-                    'arrived at destination': 0
+                    'arrived at destination': 0,
+                    'passed 1': 0,
+                    'passed 2': 0
                 }
             else:
                 observations = {
                     'into the base': 1,
                     'in the path': 1,
                     'into the safe zone': 0,
-                    'arrived at destination': 0
+                    'arrived at destination': 0,
+                    'passed 1': 0,
+                    'passed 2': 0
                 }
         elif tokens[1].position == (2, 3) and dado.value != 6 and tokens[0].position == (2, 2):
             observations = {
                 'into the base': 2,
                 'in the path': 0,
                 'into the safe zone': 0,
-                'arrived at destination': 0
+                'arrived at destination': 0,
+                'passed 1': 0,
+                'passed 2': 0
             }
         elif tokens[1].position != (2, 3):
             new_position = tokens[1].move(dado.value)
             # Verifico se la prima pedina che non è nella base è nella safe zone
-            if new_position in red_safe_zone:
-                if tokens[0].position not in red_safe_zone and tokens[0].position != (2, 2):
+            if new_position in costanti.red_safe_zone:
+                if tokens[0].position not in costanti.red_safe_zone and tokens[0].position != (2, 2):
                     observations = {
                         'into the base': 0,
                         'in the path': 1,
                         'into the safe zone': 1,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
-                elif tokens[0].position not in red_safe_zone and tokens[0].position == (2, 2):
+                elif tokens[0].position not in costanti.red_safe_zone and tokens[0].position == (2, 2):
                     observations = {
                         'into the base': 1,
                         'in the path': 0,
                         'into the safe zone': 1,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
-                elif tokens[0].position in red_safe_zone:
+                elif tokens[0].position in costanti.red_safe_zone:
                     observations = {
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 2,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
 
             elif new_position == (7, 6):
@@ -262,30 +298,38 @@ def turn(tokens, dado, phase, tok):
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 0,
-                        'arrived at destination': 2
+                        'arrived at destination': 2,
+                        'passed 1': 0,
+                        'passed 2': 0
                     }
                     win = endgame('red')
 
-                elif tokens[0].position not in red_safe_zone and tokens[0].position!=(2,2):
+                elif tokens[0].position not in costanti.red_safe_zone and tokens[0].position!=(2,2):
                     observations = {
                         'into the base': 0,
                         'in the path': 1,
                         'into the safe zone': 0,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                     }
-                elif tokens[0].position in red_safe_zone:
+                elif tokens[0].position in costanti.red_safe_zone:
                     observations = {
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 1,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
                 elif tokens[0].position == (2, 2):
                     observations = {
                         'into the base': 1,
                         'in the path': 0,
                         'into the safe zone': 0,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
     elif phase == "green" and tok == 1:
         if tokens[2].position == (2, 11) and dado.value == 6:
@@ -295,46 +339,58 @@ def turn(tokens, dado, phase, tok):
                     'into the base': 0,
                     'in the path': 2,
                     'into the safe zone': 0,
-                    'arrived at destination': 0
+                    'arrived at destination': 0,
+                    'passed 1': 0,
+                    'passed 2': 0
                 }
             else:
                 observations = {
                     'into the base': 1,
                     'in the path': 1,
                     'into the safe zone': 0,
-                    'arrived at destination': 0
+                    'arrived at destination': 0,
+                    'passed 1': 0,
+                    'passed 2': 0
                 }
         elif tokens[2].position == (2, 11) and dado.value != 6 and tokens[3].position == (2, 12):
             observations = {
                 'into the base': 2,
                 'in the path': 0,
                 'into the safe zone': 0,
-                'arrived at destination': 0
+                'arrived at destination': 0,
+                'passed 1': 0,
+                'passed 2': 0
             }
         elif tokens[2].position != (2, 11):
             new_position = tokens[2].move(dado.value)
             # Verifico se la prima pedina che non è nella base è nella safe zone
-            if new_position in green_safe_zone:
-                if tokens[3].position not in green_safe_zone and tokens[3].position != (2, 12):
+            if new_position in costanti.green_safe_zone:
+                if tokens[3].position not in costanti.green_safe_zone and tokens[3].position != (2, 12):
                     observations = {
                         'into the base': 0,
                         'in the path': 1,
                         'into the safe zone': 1,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
-                elif tokens[3].position not in green_safe_zone and tokens[3].position == (2, 12):
+                elif tokens[3].position not in costanti.green_safe_zone and tokens[3].position == (2, 12):
                     observations = {
                         'into the base': 1,
                         'in the path': 0,
                         'into the safe zone': 1,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
-                elif tokens[3].position in green_safe_zone:
+                elif tokens[3].position in costanti.green_safe_zone:
                     observations = {
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 2,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
 
             elif new_position == (6, 7):
@@ -343,30 +399,38 @@ def turn(tokens, dado, phase, tok):
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 0,
-                        'arrived at destination': 2
+                        'arrived at destination': 2,
+                        'passed 1': 0,
+                        'passed 2': 0
                     }
                     win = endgame('green')
 
-                elif tokens[3].position not in green_safe_zone and tokens[3].position!=(2, 12):
+                elif tokens[3].position not in costanti.green_safe_zone and tokens[3].position!=(2, 12):
                     observations = {
                         'into the base': 0,
                         'in the path': 1,
                         'into the safe zone': 0,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                     }
-                elif tokens[3].position in green_safe_zone:
+                elif tokens[3].position in costanti.green_safe_zone:
                     observations = {
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 1,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
                 elif tokens[3].position == (2,12):
                     observations = {
                         'into the base': 1,
                         'in the path': 0,
                         'into the safe zone': 0,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
 
     elif phase == "green" and tok == 2:
@@ -377,46 +441,58 @@ def turn(tokens, dado, phase, tok):
                     'into the base': 0,
                     'in the path': 2,
                     'into the safe zone': 0,
-                    'arrived at destination': 0
+                    'arrived at destination': 0,
+                    'passed 1': 0,
+                    'passed 2': 0
                 }
             else:
                 observations = {
                     'into the base': 1,
                     'in the path': 1,
                     'into the safe zone': 0,
-                    'arrived at destination': 0
+                    'arrived at destination': 0,
+                    'passed 1': 0,
+                    'passed 2': 0
                 }
         elif tokens[3].position == (2, 12) and dado.value != 6 and tokens[2].position == (2, 11):
             observations = {
                 'into the base': 2,
                 'in the path': 0,
                 'into the safe zone': 0,
-                'arrived at destination': 0
+                'arrived at destination': 0,
+                'passed 1': 0,
+                'passed 2': 0
             }
         elif tokens[3].position != (2, 12):
             new_position = tokens[3].move(dado.value)
             # Verifico se la prima pedina che non è nella base è nella safe zone
-            if new_position in green_safe_zone:
-                if tokens[2].position not in green_safe_zone and tokens[2].position != (2, 11):
+            if new_position in costanti.green_safe_zone:
+                if tokens[2].position not in costanti.green_safe_zone and tokens[2].position != (2, 11):
                     observations = {
                         'into the base': 0,
                         'in the path': 1,
                         'into the safe zone': 1,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
-                elif tokens[2].position not in green_safe_zone and tokens[2].position == (2, 11):
+                elif tokens[2].position not in costanti.green_safe_zone and tokens[2].position == (2, 11):
                     observations = {
                         'into the base': 1,
                         'in the path': 0,
                         'into the safe zone': 1,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
-                elif tokens[2].position in green_safe_zone:
+                elif tokens[2].position in costanti.green_safe_zone:
                     observations = {
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 2,
-                        'arrived at destination': 0
+                        'arrived at destination': 0,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
 
             elif new_position == (6, 7):
@@ -425,30 +501,38 @@ def turn(tokens, dado, phase, tok):
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 0,
-                        'arrived at destination': 2
+                        'arrived at destination': 2,
+                        'passed 1': 0,
+                        'passed 2': 0
                     }
                     win = endgame('green')
 
-                elif tokens[2].position not in green_safe_zone and tokens[2].position!=(2,11):
+                elif tokens[2].position not in costanti.green_safe_zone and tokens[2].position!=(2,11):
                     observations = {
                         'into the base': 0,
                         'in the path': 1,
                         'into the safe zone': 0,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                     }
-                elif tokens[2].position in green_safe_zone:
+                elif tokens[2].position in costanti.green_safe_zone:
                     observations = {
                         'into the base': 0,
                         'in the path': 0,
                         'into the safe zone': 1,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
                 elif tokens[2].position == (2, 11):
                     observations = {
                         'into the base': 1,
                         'in the path': 0,
                         'into the safe zone': 0,
-                        'arrived at destination': 1
+                        'arrived at destination': 1,
+                        'passed 1': 0,
+                        'passed 2': 0
                      }
 
     return observations, win
@@ -458,9 +542,11 @@ def turn(tokens, dado, phase, tok):
 def endgame(phase):
     if phase == "red":
         costanti.red_wins += 1
+        print('Hai vinto rosso')
         return True
     else:
         costanti.green_wins += 1
+        print('Hai vinto verde')
         return True
 
 
