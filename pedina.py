@@ -181,7 +181,7 @@ def turn(tokens, dado, phase, tok):
                         'passed 1': 0,
                         'passed 2': 0
                      }
-                elif tokens[1].position in red_safe_zone:
+                elif tokens[1].position in costanti.red_safe_zone:
                     observations = {
                         'into the base': 0,
                         'in the path': 0,

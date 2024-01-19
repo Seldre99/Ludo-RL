@@ -45,7 +45,7 @@ def draw_tokens(finestra, framerate):
 
     # Aggiorna la finestra
     pygame.display.flip()
-    framerate.tick(60)
+    framerate.tick(120)
 
 
 
@@ -66,6 +66,7 @@ def update_observation(observ):
 
 
 def episode_train(num):
+    global new_state
     pygame.init()
     framerate = pygame.time.Clock()
     env = ludo_env.ludo_env()
@@ -99,7 +100,7 @@ def episode_train(num):
             draw_tokens(finestra, framerate)
 
             #Nuovo turno agente se esce 6
-            if consecutive_sixes > 0 and not end:
+            if consecutive_sixes > 0 and end is False:
                 for consecutive_sixes in range(4):
                     new_state = update_observation(observ)
                     updateQ(current_state, action, reward, new_state)
@@ -116,7 +117,7 @@ def episode_train(num):
                     draw_tokens(finestra, framerate)
 
                     updateQ(current_state, action, reward, new_state)
-                    if consecutive_sixes == 0 or not end:
+                    if consecutive_sixes == 0 or end is True:
                         break
 
             if not end:
@@ -127,7 +128,7 @@ def episode_train(num):
                 draw_tokens(finestra, framerate)
 
                 # Nuovo turno cpu se esce 6
-                if consecutive_sixes > 0 and not end:
+                if consecutive_sixes > 0 and end is False:
                     for consecutive_sixes in range(3):
                         new_state = update_observation(observ)
                         table(finestra)
@@ -135,15 +136,13 @@ def episode_train(num):
                         dado, observ, consecutive_sixes, end = env.step(random.randint(0, 1), dado, consecutive_sixes, 'green')
                         new_state = update_observation(observ)
                         draw_tokens(finestra, framerate)
-
-                        if consecutive_sixes == 0 or not end:
+                        if consecutive_sixes == 0 or end is True:
                             break
                 else:
                     new_state = update_observation(observ)
 
             updateQ(current_state, action, reward, new_state)
             current_state = new_state
-            print(end)
 
         print(f"episodio {episode}: {total_reward}")
         print(f"Vittorie agente: {costanti.red_wins} - Vittorie cpu: {costanti.green_wins}")
@@ -217,7 +216,7 @@ Q = np.random.rand(34, 2)
 
 
 if __name__ == '__main__':
-    episode_train(50)
+    episode_train(1000)
 
 
 
