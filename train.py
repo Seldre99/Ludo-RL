@@ -124,7 +124,7 @@ def episode_train(num):
                 #Turno cpu randomica
                 turno_player_red = False
                 draw_dice(dado, finestra, turno_player_red)
-                dado, observ, consecutive_sixes, end = env.step(random.randint(0, 1), dado, 0, 'green')
+                dado, observ_cpu, consecutive_sixes, end = env.step(random.randint(0, 1), dado, 0, 'green')
                 draw_tokens(finestra, framerate)
 
                 # Nuovo turno cpu se esce 6
@@ -133,7 +133,7 @@ def episode_train(num):
                         new_state = update_observation(observ)
                         table(finestra)
                         draw_dice(dado, finestra, turno_player_red)
-                        dado, observ, consecutive_sixes, end = env.step(random.randint(0, 1), dado, consecutive_sixes, 'green')
+                        dado, observ_cpu, consecutive_sixes, end = env.step(random.randint(0, 1), dado, consecutive_sixes, 'green')
                         new_state = update_observation(observ)
                         draw_tokens(finestra, framerate)
                         if consecutive_sixes == 0 or end is True:
