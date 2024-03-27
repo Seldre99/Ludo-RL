@@ -6,6 +6,8 @@ import numpy as np
 import random
 import ludo_env
 import costanti
+import matplotlib.pyplot as plt
+import pickle
 
 
 def table(finestra):
@@ -76,10 +78,16 @@ def episode_train(num):
     pygame.display.set_caption("Tabella Ludo")
 
     total_reward = 0
+    agent_wins = []
+    cpu_wins = []
+    total_rewards = []
+
+    plt.ion()
+    fig, ax = plt.subplots()
 
     for episode in range(num):
         end = False
-        current_state = 30  #np.random.randint(0, 34)
+        current_state = 30
         dado.roll
 
         while not end:
@@ -93,7 +101,15 @@ def episode_train(num):
             turno_player_red = True
             draw_dice(dado, finestra, turno_player_red)
             #Turno agente
-            action = choose_action(current_state)
+            if current_state in range(1, 4) or current_state in range(8, 11) or current_state in range(19, 22):
+                # Gestione per gli stati dove una pedina è nel GOAL e di conseguenza l'unica azione disponibile
+                # è il movimento solo dell'altra
+                if tokens[0].position == (7, 6):
+                    action = 1
+                else:
+                    action = 0
+            else:
+                action = choose_action(current_state)
             dado, observ, consecutive_sixes, end = env.step(action, dado, 0, 'red')
             reward = rewards[current_state, action]
             total_reward += reward
@@ -108,15 +124,22 @@ def episode_train(num):
                     table(finestra)
                     draw_dice(dado, finestra, turno_player_red)
 
-                    action = choose_action(new_state)
+                    if new_state in range(1, 4) or new_state in range(8, 11) or new_state in range(19, 22):
+                        if tokens[0].position == (7, 6):
+                            action = 1
+                        else:
+                            action = 0
+                    else:
+                        action = choose_action(new_state)
                     dado, observ, consecutive_sixes, end = env.step(action, dado, consecutive_sixes, 'red')
-                    reward = rewards[current_state, action]
+                    reward = rewards[new_state, action]
                     total_reward += reward
 
-                    new_state = update_observation(observ)
+                    new_state_2 = update_observation(observ)
                     draw_tokens(finestra, framerate)
 
-                    updateQ(current_state, action, reward, new_state)
+                    updateQ(new_state, action, reward, new_state_2)
+                    current_state = new_state_2
                     if consecutive_sixes == 0 or end is True:
                         break
 
@@ -146,8 +169,25 @@ def episode_train(num):
 
         print(f"episodio {episode}: {total_reward}")
         print(f"Vittorie agente: {costanti.red_wins} - Vittorie cpu: {costanti.green_wins}")
-        env.reset()
+        agent_wins.append(costanti.red_wins)
+        cpu_wins.append(costanti.green_wins)
+        total_rewards.append(total_reward)
 
+        # Update the plots
+        ax.clear()
+        ax.plot(agent_wins, label='Agent Wins', color='red')
+        ax.plot(cpu_wins, label='CPU Wins', color='green')
+        ax.set_title('Wins Over Episodes')
+        ax.set_xlabel('Episode')
+        ax.set_ylabel('Total Wins')
+        ax.legend()
+
+        # Pause to allow the plot to update
+        plt.pause(0.1)
+        env.reset()
+    plt.savefig('wins_plot.png')
+    plt.ioff()
+    plt.show()
 
 
 def updateQ(current_state, action, reward, new_state):
@@ -157,40 +197,17 @@ def updateQ(current_state, action, reward, new_state):
 
 
 rewards = np.array([
-    [1, 1],
-    [0.5, 0.5],
-    [0.6, 0],
-    [0, 0.6],
-    [0.5, 0.5],
-    [0.6, 0.3],
-    [0.3, 0.6],
-    [0.5, 0.5],
-    [0.5, 0.5],
-    [0, 0.6],
-    [0.6, 0],
-    [0.5, 0.5],
-    [0.7, 0.3],
-    [0.3, 0.7],
-    [0.5, 0.5],
-    [0.5, 0.5],
-    [0.6, 0.2],
-    [0.2, 0.6],
-    [0.5, 0.5],
-    [0.6, 0.6],
-    [0, 0.6],
-    [0.5, 0.5],
-    [0.5, 0.3],
-    [0.3, 0.5],
-    [0.5, 0.5],
-    [0.5, 0.5],
-    [0.4, 0.5],
-    [0.5, 0.4],
-    [0.3, 0.6],
-    [0.5, 0.5],
-    [0.5, 0.7],
-    [0.7, 0.5],
-    [0.6, 0.6]
-])
+                     [5, 5],
+                     [0.2, 0.2], [0, 0.3], [0.3, 0],
+                     [0.2, 0.2], [-0.9, 0.5], [0.5, -0.9], [0.2, 0.2],
+                     [0, 0], [0.2, 0], [0, 0.2],
+                     [0.2, 0.2], [-0.9, 0.5], [0.5, -0.5], [0.2, 0.2],
+                     [0.3, 0.3], [0.5, -0.9], [-0.9, 0.5], [0.2, 0.2],
+                     [0, 0], [-0.9, 0.5], [0.5, -0.9],
+                     [0, 0], [-0.9, 0.5], [0.5, -0.9], [0.2, 0.2],
+                     [0.2, 0.2], [-0.7, 0.4], [0.4, -0.7], [0.2, 0.2],
+                     [0.3, 0.3], [-0.5, 0.6], [0.6, -0.5], [0.3, 0.3]
+                   ])
 
 lista_stati = [
     (0, 0, 0, 2, 0, 0), (0, 0, 1, 1, 0, 0), (0, 0, 1, 1, 0, 1), (0, 0, 1, 1, 1, 0),
@@ -205,10 +222,10 @@ lista_stati = [
 ]
 
 # Parametri dell'algoritmo Q-learning
-learning_rate = 0.8
+learning_rate = 0.3
 discount_factor = 0.95
-exploration_prob = 0.2
-num_episodes = 1000
+exploration_prob = 0.1
+num_episodes = 20000
 
 # Inizializzazione della matrice Q con valori casuali
 Q = np.random.rand(34, 2)
@@ -216,7 +233,11 @@ Q = np.random.rand(34, 2)
 
 
 if __name__ == '__main__':
-    episode_train(1000)
+    episode_train(num_episodes)
+    with open('models/modello_q_learning.pkl', 'wb') as file:
+        pickle.dump(Q, file)
+
+    print("Modello Q salvato con successo.")
 
 
 

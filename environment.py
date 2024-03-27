@@ -13,7 +13,6 @@ class Dice:
         self.value = random.randint(1, 6)
 
 
-# Funzione per disegnare la tabella
 def disegna_tabella(finestra, dimensione_cella, spessore_bordo):
     for riga in range(15):
         for colonna in range(15):

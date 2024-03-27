@@ -2,9 +2,11 @@ from pedina import turn, check_end_position
 import gym
 from costanti import *
 
+
 def move_token_one(dado, phase):
     observation, end = turn(tokens, dado, phase, 1)
     return observation, end
+
 
 def move_token_two(dado, phase):
     observation, end = turn(tokens, dado, phase, 2)
@@ -47,7 +49,7 @@ class ludo_env(gym.Env):
             observation, end = move_token_two(dado, phase)
 
         dice_value = dado.value
-        #print("turno:", phase, "valore dado:", dice_value)
+
         # Se il dado ritorna 6, incrementa il conteggio
         if dice_value == 6:
             consecutive_sixes += 1
