@@ -172,7 +172,7 @@ with open('models/modello_q_learning.pkl', 'rb') as file:
     Q = pickle.load(file)
 
 # Sarsa model
-#with open('models/modelloq_sarsa.pkl', 'rb') as file:
+#with open('models/modello_sarsa.pkl', 'rb') as file:
 #    Q = pickle.load(file)
 
 if __name__ == '__main__':
