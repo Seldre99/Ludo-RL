@@ -11,9 +11,9 @@ import pickle
 
 
 def table(finestra):
-    # Pulisci la finestra
+    # Clean window
     finestra.fill(colore_sfondo)
-    # Disegna la tabella
+    # Draw the table
     disegna_tabella(finestra, dimensione_cella, spessore_bordo)
 
 
@@ -26,7 +26,7 @@ def draw_dice(dado, finestra, turno_player_red):
         dado.position[1] * dimensione_cella, dado.position[0] * dimensione_cella, dimensione_cella, dimensione_cella),
                      spessore_bordo)
 
-    # Disegna il numero del dado
+    # Draw the number of the dice
     number_color = (255, 0, 0) if turno_player_red else (0, 255, 0)
     number = pygame.font.SysFont(None, 30).render(str(dado.value), True, number_color)
     number_rect = number.get_rect(center=(dado.position[1] * dimensione_cella + dimensione_cella // 2,
@@ -35,7 +35,7 @@ def draw_dice(dado, finestra, turno_player_red):
 
 
 def draw_tokens(finestra, framerate):
-    # Disegna i tokens
+    # Draw tokens
     for token in tokens:
         x, y = token.position
         center_x = y * dimensione_cella + dimensione_cella // 2
@@ -45,7 +45,7 @@ def draw_tokens(finestra, framerate):
         number_rect = number.get_rect(center=(center_x, center_y))
         finestra.blit(number, number_rect)
 
-    # Aggiorna la finestra
+    # Update window
     pygame.display.flip()
     framerate.tick(120)
 
@@ -65,7 +65,7 @@ def game(num):
     framerate = pygame.time.Clock()
     env = ludo_env.ludo_env()
     dado = Dice((0, 0, 0), (7, 7), 30)
-    #Inizializza la finestra
+    # Initialize window
     finestra = pygame.display.set_mode((larghezza_finestra, altezza_finestra))
     pygame.display.set_caption("Tabella Ludo")
 
@@ -90,12 +90,12 @@ def game(num):
             table(finestra)
             turno_player_red = True
             draw_dice(dado, finestra, turno_player_red)
-            #Turno agente
+            # Agent's turn
             action = np.argmax(Q[current_state][:])
             dado, observ, consecutive_sixes, end = env.step(action, dado, 0, 'red')
             draw_tokens(finestra, framerate)
 
-            #Nuovo turno agente se esce 6
+            # New agent's turn if 6 comes out
             if consecutive_sixes > 0 and end is False:
                 for consecutive_sixes in range(4):
                     current_state = update_observation(observ)
@@ -112,13 +112,13 @@ def game(num):
                         break
 
             if not end:
-                #Turno cpu randomica
+                # Random cpu turn
                 turno_player_red = False
                 draw_dice(dado, finestra, turno_player_red)
                 dado, observ_cpu, consecutive_sixes, end = env.step(random.randint(0, 1), dado, 0, 'green')
                 draw_tokens(finestra, framerate)
 
-                # Nuovo turno cpu se esce 6
+                # New cpu turn if 6 comes out
                 if consecutive_sixes > 0 and end is False:
                     for consecutive_sixes in range(3):
                         current_state = update_observation(observ)
@@ -167,11 +167,11 @@ lista_stati = [
     (2, 0, 0, 0, 1, 0), (2, 0, 0, 0, 1, 1)
 ]
 
-#Modello Q-Learning
+# Q-Learning model
 with open('models/modello_q_learning.pkl', 'rb') as file:
     Q = pickle.load(file)
 
-#Modello Sarsa
+# Sarsa model
 #with open('models/modelloq_sarsa.pkl', 'rb') as file:
 #    Q = pickle.load(file)
 

@@ -9,7 +9,7 @@ green_wins = 0
 larghezza_finestra = 600
 altezza_finestra = 600
 colore_sfondo = (255, 255, 255)
-dimensione_cella = larghezza_finestra // 15  # 15 caselle in una riga
+dimensione_cella = larghezza_finestra // 15  # 15 boxes in a row
 spessore_bordo = 1
 phase = "red"
 

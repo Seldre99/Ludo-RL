@@ -17,7 +17,7 @@ class ludo_env(gym.Env):
     def __init__(self):
         super(ludo_env, self).__init__()
         self.observations = observations
-        self.action_space = gym.spaces.Discrete(2)  # Due azioni possibili
+        self.action_space = gym.spaces.Discrete(2)  # Two possible actions
         self.observation_space = gym.spaces.Dict({
             'into the base': gym.spaces.Discrete(3),
             'in the path': gym.spaces.Discrete(3),
@@ -50,7 +50,7 @@ class ludo_env(gym.Env):
 
         dice_value = dado.value
 
-        # Se il dado ritorna 6, incrementa il conteggio
+        # If the dice returns 6, consecutive_sixes is increased
         if dice_value == 6:
             consecutive_sixes += 1
             dado.roll()
@@ -58,10 +58,10 @@ class ludo_env(gym.Env):
                 print(f"Giocatore ha ottenuto {max_consecutive_sixes} 6 consecutivi. Turno passa all'avversario.")
                 consecutive_sixes = 0
         else:
-            # Se il dado non ritorna 6, resetta il conteggio
+            # If the dice does not return 6, consecutive_sixes resets
             consecutive_sixes = 0
 
-        # Se il dado non ritorna 6, cambia automaticamente il turno all'altro giocatore
+        # If the dice does not return 6, it automatically changes the turn to the other player
         if dice_value != 6:
             dado.roll()
 

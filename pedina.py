@@ -58,7 +58,7 @@ class Token:
         return self.position
 
 
-# Scelta del token da spostare
+# Choice of token to move
 def turn(tokens, dado, phase, tok):
     global observations
     win = False
@@ -95,7 +95,7 @@ def turn(tokens, dado, phase, tok):
             }
         elif tokens[0].position != (2, 2):
             new_position = tokens[0].move(dado.value)
-            # Verifico se la prima pedina che non è nella base è nella safe zone
+            # Check if the first token that is not in the base is in the safe zone
             if new_position in costanti.red_safe_zone:
                 if tokens[1].position not in costanti.red_safe_zone and tokens[1].position != (2, 3):
                     observations = {
@@ -196,7 +196,7 @@ def turn(tokens, dado, phase, tok):
             }
         elif tokens[1].position != (2, 3):
             new_position = tokens[1].move(dado.value)
-            # Verifico se la prima pedina che non è nella base è nella safe zone
+            # Check if the first token that is not in the base is in the safe zone
             if new_position in costanti.red_safe_zone:
                 if tokens[0].position not in costanti.red_safe_zone and tokens[0].position != (2, 2):
                     observations = {
@@ -297,7 +297,7 @@ def turn(tokens, dado, phase, tok):
             }
         elif tokens[2].position != (2, 11):
             new_position = tokens[2].move(dado.value)
-            # Verifico se la prima pedina che non è nella base è nella safe zone
+            # Check if the first token that is not in the base is in the safe zone
             if new_position in costanti.green_safe_zone:
                 if tokens[3].position not in costanti.green_safe_zone and tokens[3].position != (2, 12):
                     observations = {
@@ -399,7 +399,7 @@ def turn(tokens, dado, phase, tok):
             }
         elif tokens[3].position != (2, 12):
             new_position = tokens[3].move(dado.value)
-            # Verifico se la prima pedina che non è nella base è nella safe zone
+            # Check if the first token that is not in the base is in the safe zone
             if new_position in costanti.green_safe_zone:
                 if tokens[2].position not in costanti.green_safe_zone and tokens[2].position != (2, 11):
                     observations = {
@@ -472,7 +472,7 @@ def turn(tokens, dado, phase, tok):
     return observations, win
 
 
-# Controllo se ci sia un vincitore
+# Check to see if there is a winner
 def endgame(phase):
     if phase == "red":
         costanti.red_wins += 1
@@ -484,7 +484,7 @@ def endgame(phase):
         return True
 
 
-# Controllo per evitare di perdere il turno
+# Control to avoid losing turn
 def check_end_position(tokens, phase, tok):
     if phase == "red" and tok == 1:
         return True if (tokens[0].position == (7, 6)) else False
