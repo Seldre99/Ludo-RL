@@ -1,34 +1,18 @@
-Titolo del Progetto: Applicazione del Q-learning al Gioco da Tavolo Ludo
+# Applicazione del Q-learning & Sarsa al Gioco da Tavolo Ludo
 
-Obiettivi:
-Questo progetto si propone di sviluppare e implementare un sistema avanzato di apprendimento per rinforzo
-applicato al gioco da tavolo Ludo. Gli obiettivi specifici includono:
-• Apprendimento di una Strategia di Gioco Ottimale: Creare un agente intelligente capace di
-apprendere una strategia di gioco ottimale nel Ludo attraverso l'impiego del Q-learning,
-migliorando nel tempo le decisioni tattiche durante le partite.
-• Definizione degli Stati del Gioco: Identificare in modo accurato gli stati del gioco, considerando la
-posizione delle pedine dell'agente e degli avversari, nonché le condizioni del tabellone di gioco.
-• Azioni Tattiche Avanzate: Definire azioni avanzate che consentano all'agente di prendere decisioni
-tatiche mirate, come il movimento di pedine specifiche, la decisione di occupare o evitare
-determinate caselle, e la gestione delle risorse di gioco.
-• Implementazione dell’agente basato su Q-learning: Sviluppare un sistema di apprendimento
-per rinforzo basato su Q-learning.
-Metodologia di Implementazione:
-• Simulazione del Gioco Ludo: Implementare un ambiente virtuale per simulare partite di Ludo,
-considerando le regole del gioco e fornendo una rappresentazione realistica delle dinamiche di gioco.
-• Sviluppo dell'Agente di Gioco: Implementare un agente basato su Q-learning capace di
-apprendere strategie complesse.
-• Definizione degli Stati e delle Azioni Tattiche: Identificare in modo dettagliato gli stati del gioco e
-definire azioni tattiche avanzate, considerando variabili come la posizione delle pedine, le condizioni
-del gioco e le dinamiche strategiche.
-• Addestramento Iterativo e Fine-Tuning: Condurre sessioni di addestramento iterativo, ottimizzando
-i parametri e le strategie di gioco dell'agente attraverso partite simulate.
-• Valutazione delle Prestazioni: Valutare le prestazioni dell'agente in termini di capacità di
-apprendimento della strategia di gioco ottimale, vincendo partite contro avversari virtuali.
+Ludo-RL è un progetto effettuato per l'esame di Intelligenza Artificiale ed ha previsto lo sviluppo e l'implementazione di un sistema di apprendimento per rinforzo finalizzato al gioco da tavolo Ludo. Ludo è un gioco da tavolo di percorso il cui obiettivo consiste nel condurre le proprie pedine al goal centrale del tabellone, seguendo un percorso lungo i margini dello stesso.
+La definizione ell’environment è stata resa possibile tramite l’utilizzo della libreria Pygame, ed è composta da quattro zone:
+- Base: posizione di partenza delle due pedine dell'agente e della CPU
+- Path: posizioni nel quale le pedine possono muoversi
+- Safe: caselle che portano al goal finale
+- Goal: posizione di arrivo
+(Per visualizzare lo schema usato vedere Immagini/Matrice Ludo.png)
 
-Risultati:
-• Dimostrazione dell'abilità dell'agente nel vincere partite contro avversari virtuali.
-• Ottimizzazione delle prestazioni dell'agente attraverso l'addestramento iterativo, evidenziando
-miglioramenti nella strategia di gioco.
-• Analisi delle prestazioni in scenari di gioco variati.
-• Discutere le sfide affrontate durante l'implementazione e come sono state risolte.
+Per lo sviluppo di questo progetto sono state implementate le seguenti regole di Ludo:
+- Inizio della partita: Per avviare il gioco, i giocatori lanciano il dado a turno. Per mettere una pedina nel percorso di gioco, è necessario ottenere un risultato di 6. Fino a quando un giocatore non ottiene 6, deve passare il turno.
+- Avanzare nel path: Una volta ottenuto un 6, il giocatore posiziona una pedina nel path e ha il diritto di lanciare nuovamente il dado. Il valore del dado indica il numero di caselle che la pedina può avanzare nel percorso. Se il giocatore ottiene un 6 di nuovo, può scegliere di inserire un'altra pedina nel percorso o muovere una pedina già presente.
+- Vincolo sul dado: Se un giocatore ottiene un 6 per tre volte consecutive, deve passare il turno.
+
+L'agente può effettuare due azioni ovvero muovere la prima pedina, muovere la seconda pedina. L'agente è stato addestrato mediante l'uso del Q-Learning e di Sarsa.
+
+Risultati e maggiori informazioni sono presenti nella documentazione 'IA-Ludo.pdf'
