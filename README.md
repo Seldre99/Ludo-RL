@@ -14,4 +14,4 @@ Per lo sviluppo di questo progetto sono state implementate le seguenti regole di
 
 L'agente può effettuare due azioni ovvero muovere la prima pedina, muovere la seconda pedina. L'agente è stato addestrato mediante l'uso del Q-Learning e di Sarsa.
 
-Risultati e maggiori informazioni sono presenti nella documentazione 'IA-Ludo.pdf'
+Risultati e maggiori informazioni sono presenti nella documentazione 'documentazione/IA-Ludo.pdf'
