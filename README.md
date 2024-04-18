@@ -1,6 +1,6 @@
 # Ludo RL
 Ludo-RL è un progetto effettuato per l'esame di Intelligenza Artificiale ed ha previsto lo sviluppo e l'implementazione di un sistema di apprendimento per rinforzo finalizzato al gioco da tavolo Ludo. Ludo è un gioco da tavolo di percorso il cui obiettivo consiste nel condurre le proprie pedine al goal centrale del tabellone, seguendo un percorso lungo i margini dello stesso.
-La definizione ell’environment è stata resa possibile tramite l’utilizzo della libreria Pygame, ed è composta da quattro zone:
+La definizione dell’environment è stata resa possibile tramite l’utilizzo della libreria Pygame, ed è composta da quattro zone:
 - Base: posizione di partenza delle due pedine dell'agente e della CPU
 - Path: posizioni nel quale le pedine possono muoversi
 - Safe: caselle che portano al goal finale
